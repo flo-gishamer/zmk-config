@@ -60,7 +60,7 @@
             bindings = <&kp EQUAL &kp SPACE>;
         };
 
-        // Task view: first encoder click opens it and enables the TASK layer,
+        // Task view: first left encoder click opens it and enables the TASK layer,
         // where the encoders send arrow keys; second click (or Esc) closes it again
         task_open: task_open {
             compatible = "zmk,behavior-macro";
@@ -109,7 +109,7 @@
 &kp ESC         &kp N1  &kp N2    &kp N3    &kp N4     &kp N5                             &kp N6     &kp N7     &kp N8         &kp N9    &kp N0    &kp MINUS
 &kp TAB         &kp Q   &kp W     &kp E     &kp R      &kp T      &kp Y                              &kp U      &kp I          &kp O     &kp P     &kp LBKT
 &mt LSHFT BSPC  &kp A   &kp S     &kp D     &kp F      &kp G      &kp H                              &kp J      &kp K          &kp L     &kp SEMI  &kp SQT
-&mt LSHFT BSPC  &kp Z   &kp X     &kp C     &kp V      &kp B      &kp C_MUTE  &kp C_PLAY  &kp N      &kp M      &kp COMMA      &kp DOT   &kp FSLH  &mt RSHFT DEL
+&mt LSHFT BSPC  &kp Z   &kp X     &kp C     &kp V      &kp B      &task_open  &kp C_PLAY  &kp N      &kp M      &kp COMMA      &kp DOT   &kp FSLH  &mt RSHFT DEL
                         &kp LGUI  &kp LALT  &kp LCTRL  &mo LOWER  &kp RET     &kp SPACE   &mo RAISE  &kp RCTRL  &kp RIGHT_ALT  &kp RGUI
             >;
 
@@ -151,7 +151,7 @@
 &trans  &kp LG(N1)      &kp LG(N2)         &kp LG(N3)          &kp LG(N4)        &kp LG(N5)                       &trans  &trans        &kp LC(HOME)  &trans         &trans  &trans
 &trans  &kp LG(LS(S))   &kp LG(UP)         &kp LG(DOWN)        &kp LA(TAB)       &kp LA(F4)  &trans                   &kp LC(LEFT)  &kp UP        &kp LC(RIGHT)  &trans  &trans
 &trans  &trans          &kp LG(LEFT)       &kp LG(RIGHT)       &kp LG(TAB)       &kp LG(Y)   &trans                   &kp LEFT      &kp DOWN      &kp RIGHT      &trans  &trans
-&trans  &trans          &kp LG(LS(LEFT))   &kp LG(LS(RIGHT))   &kp LA(LS(TAB))   &kp LC(W)   &task_open  &trans  &trans   &kp HOME      &kp LC(END)   &kp END        &trans  &trans
+&trans  &trans          &kp LG(LS(LEFT))   &kp LG(LS(RIGHT))   &kp LA(LS(TAB))   &kp LC(W)   &kp C_MUTE  &trans  &trans   &kp HOME      &kp LC(END)   &kp END        &trans  &trans
                     &trans     &trans      &trans       &trans  &trans  &trans  &trans  &trans        &trans        &trans
             >;
 
@@ -170,7 +170,7 @@
             bindings = <
 &none       &none         &none         &none            &none            &none                            &none  &none  &none  &none  &none  &none
 &none       &none         &none         &rgb_ug RGB_EFF  &rgb_ug RGB_TOG  &ext_power EP_TOG  &none                &none  &none  &none  &none  &none
-&bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2     &bt BT_SEL 3     &bt BT_SEL 4       &none                &none  &none  &none  &none  &none
+&bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2     &bt BT_SEL 3     &bt BT_SEL 4       &none                &kp F13  &none  &none  &none  &none
 &bootloader  &none         &none         &none            &none            &studio_unlock     &none  &none  &none  &none  &none  &none  &none  &bootloader
                           &none         &none            &none            &none              &none  &none  &none  &none  &none  &none
             >;
@@ -180,14 +180,15 @@
             display-name = "task";
 
             // Active while the Windows task view is open (see task_open macro).
-            // Left encoder: left/right, right encoder: down/up, left encoder click: Enter, Esc: cancel
+            // Copy of the raise layer; left encoder: left/right, right encoder: down/up,
+            // left encoder click or Enter: select, Esc: cancel
 
             bindings = <
-&task_cancel  &trans  &trans  &trans  &trans  &trans                                &trans  &trans  &trans  &trans  &trans  &trans
-&trans        &trans  &trans  &trans  &trans  &trans  &trans                                &trans  &trans  &trans  &trans  &trans
-&trans        &trans  &trans  &trans  &trans  &trans  &trans                                &trans  &trans  &trans  &trans  &trans
-&trans        &trans  &trans  &trans  &trans  &trans  &task_select  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-                      &trans  &trans  &trans  &trans  &trans        &trans  &trans  &trans  &trans  &trans
+&task_cancel  &kp LG(N1)      &kp LG(N2)         &kp LG(N3)          &kp LG(N4)        &kp LG(N5)                       &trans  &trans        &kp LC(HOME)  &trans         &trans  &trans
+&trans  &kp LG(LS(S))   &kp LG(UP)         &kp LG(DOWN)        &kp LA(TAB)       &kp LA(F4)  &trans                   &kp LC(LEFT)  &kp UP        &kp LC(RIGHT)  &trans  &trans
+&trans  &trans          &kp LG(LEFT)       &kp LG(RIGHT)       &kp LG(TAB)       &kp LG(Y)   &trans                   &kp LEFT      &kp DOWN      &kp RIGHT      &trans  &trans
+&trans  &trans          &kp LG(LS(LEFT))   &kp LG(LS(RIGHT))   &kp LA(LS(TAB))   &kp LC(W)   &task_select  &trans  &trans   &kp HOME      &kp LC(END)   &kp END        &trans  &trans
+                    &trans     &trans      &trans       &trans  &task_select  &trans  &trans  &trans        &trans        &trans
             >;
 
             sensor-bindings = <&inc_dec_kp LEFT RIGHT &inc_dec_kp DOWN UP>;
