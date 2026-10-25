@@ -19,6 +19,7 @@
 #define LOWER 1
 #define RAISE 2
 #define ADJUST 3
+#define TASK 4
 
 / {
     behaviors {
@@ -57,6 +58,26 @@
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings = <&kp EQUAL &kp SPACE>;
+        };
+
+        // Task view: first encoder click opens it and enables the TASK layer,
+        // where the encoders send arrow keys; second click (or Esc) closes it again
+        task_open: task_open {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LG(TAB) &tog TASK>;
+        };
+
+        task_select: task_select {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp RET &tog TASK>;
+        };
+
+        task_cancel: task_cancel {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp ESC &tog TASK>;
         };
     };
 
@@ -130,7 +151,7 @@
 &trans  &kp LG(N1)      &kp LG(N2)         &kp LG(N3)          &kp LG(N4)        &kp LG(N5)                       &trans  &trans        &kp LC(HOME)  &trans         &trans  &trans
 &trans  &kp LG(LS(S))   &kp LG(UP)         &kp LG(DOWN)        &kp LA(TAB)       &kp LA(F4)  &trans                   &kp LC(LEFT)  &kp UP        &kp LC(RIGHT)  &trans  &trans
 &trans  &trans          &kp LG(LEFT)       &kp LG(RIGHT)       &kp LG(TAB)       &kp LG(Y)   &trans                   &kp LEFT      &kp DOWN      &kp RIGHT      &trans  &trans
-&trans  &trans          &kp LG(LS(LEFT))   &kp LG(LS(RIGHT))   &kp LA(LS(TAB))   &kp LC(W)   &trans  &trans  &trans   &kp HOME      &kp LC(END)   &kp END        &trans  &trans
+&trans  &trans          &kp LG(LS(LEFT))   &kp LG(LS(RIGHT))   &kp LA(LS(TAB))   &kp LC(W)   &task_open  &trans  &trans   &kp HOME      &kp LC(END)   &kp END        &trans  &trans
                     &trans     &trans      &trans       &trans  &trans  &trans  &trans  &trans        &trans        &trans
             >;
 
@@ -153,6 +174,23 @@
 &bootloader  &none         &none         &none            &none            &studio_unlock     &none  &none  &none  &none  &none  &none  &none  &bootloader
                           &none         &none            &none            &none              &none  &none  &none  &none  &none  &none
             >;
+        };
+
+        task_layer {
+            display-name = "task";
+
+            // Active while the Windows task view is open (see task_open macro).
+            // Left encoder: left/right, right encoder: down/up, left encoder click: Enter, Esc: cancel
+
+            bindings = <
+&task_cancel  &trans  &trans  &trans  &trans  &trans                                &trans  &trans  &trans  &trans  &trans  &trans
+&trans        &trans  &trans  &trans  &trans  &trans  &trans                                &trans  &trans  &trans  &trans  &trans
+&trans        &trans  &trans  &trans  &trans  &trans  &trans                                &trans  &trans  &trans  &trans  &trans
+&trans        &trans  &trans  &trans  &trans  &trans  &task_select  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+                      &trans  &trans  &trans  &trans  &trans        &trans  &trans  &trans  &trans  &trans
+            >;
+
+            sensor-bindings = <&inc_dec_kp LEFT RIGHT &inc_dec_kp DOWN UP>;
         };
     };
 };
